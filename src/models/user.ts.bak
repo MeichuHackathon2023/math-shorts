@@ -1,0 +1,115 @@
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { z } from "zod";
+
+import { registry } from "@/utils/openApi";
+
+import { studentSchema } from "./student";
+import { advisorSchema } from "./advisor";
+import { reviewerSchema } from "./reviewer";
+import { transferInfoSchema } from "./transferInfo";
+import { roleSchema } from "./role";
+import { assert } from "console";
+import { Application, applicationSchema } from "./application";
+import { ZodTypeAny } from "zod";
+import { ZodType } from "zod";
+import { ZodObject } from "zod";
+import { ZodObjectDef } from "zod";
+import { ZodAny } from "zod";
+import { UserRoleType } from "@/utils/role";
+
+// TODO: role, applications needs to be add.
+// import { applicationSchema } from "./application";
+
+extendZodWithOpenApi(z);
+
+const userType = z.object({
+    id: z.number(),
+    // user:
+    name: z.string().openapi({ description: "姓名" }),
+    email: z.string().email().openapi({ description: "電子郵件" }),
+    password: z.string().openapi({ description: "密碼" }),
+    roles: z.array(roleSchema).openapi({ description: "角色" }),
+    student: studentSchema
+        .optional()
+        .nullable()
+        .openapi({ description: "學生" }),
+    advisor: advisorSchema
+        .optional()
+        .nullable()
+        .openapi({ description: "指導教授" }),
+    reviewer: reviewerSchema
+        .optional()
+        .nullable()
+        .openapi({ description: "審查人員" }),
+    transferInfo: transferInfoSchema
+        .optional()
+        .nullable()
+        .openapi({ description: "轉帳資訊" }),
+    application: z
+        .object({
+            id: z.number(),
+            admission: z.string().nullable()
+        })
+        .optional()
+        .nullable()
+        .openapi({ description: "申請資料 id" }),
+});
+
+export const userSchema = registry.register("User", userType);
+
+export type User = z.infer<typeof userSchema>;
+
+const userRoleDataValidationInputType = userSchema
+    .pick({
+        roles: true,
+        student: true,
+        reviewer: true,
+        advisor: true,
+        transferInfo: true,
+    })
+    .partial({
+        student: true,
+        reviewer: true,
+        advisor: true,
+        transferInfo: true,
+    })
+    .required({
+        roles: true,
+    });
+
+type UserRoleDataValidationInput = z.infer<
+    typeof userRoleDataValidationInputType
+>;
+
+export const refineFunction = (user: UserRoleDataValidationInput) => {
+    if (
+        user.roles.some(({ name }) => name == UserRoleType.STUDENT) !==
+        (user.student != undefined)
+    )
+        return false;
+
+    if (
+        user.roles.some(({ name }) => name == UserRoleType.ADVISOR) !==
+        (user.advisor != undefined)
+    )
+        return false;
+
+    if (
+        user.roles.some(
+            ({ name }) =>
+                name == UserRoleType.REVIEWER1ST ||
+                name == UserRoleType.REVIEWER2ND,
+        ) !==
+        (user.reviewer != undefined)
+    )
+        return false;
+    if (
+        user.roles.some(({ name }) => name == UserRoleType.REVIEWER2ND) !==
+        (user.transferInfo != undefined)
+    )
+        return false;
+
+    return true;
+};
+
+export const refineMessage = "Data and roles is not matched";

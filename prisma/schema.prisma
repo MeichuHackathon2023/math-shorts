@@ -1,0 +1,75 @@
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id        Int        @id @default(autoincrement())
+    email     String     @unique
+    name      String
+    password  String
+    grade     Grade
+    videos    Video[]
+    playlists Playlist[]
+}
+
+model Video {
+    id                Int                         @id @default(autoincrement())
+    name              String
+    description       String
+    kkVodId           String
+    users             User[]
+    tags              Tag[]
+    playlists         Playlist[]
+    FlashcardProgress FlashcardProgressOnVideos[]
+}
+
+model Playlist {
+    id          Int     @id @default(autoincrement())
+    name        String
+    description String
+    users       User[]
+    videos      Video[]
+}
+
+model Tag {
+    id     Int     @id @default(autoincrement())
+    videos Video[]
+    name   String
+}
+
+model PlayProgress {
+    userId        Int
+    videoId       Int
+    secondElapsed Int
+
+    @@id([userId, videoId])
+}
+
+model FlashcardProgress {
+    userId     Int
+    playlistId Int
+    hidden     FlashcardProgressOnVideos[]
+
+    @@id([userId, playlistId])
+}
+
+model FlashcardProgressOnVideos {
+    video                       Video             @relation(fields: [videoId], references: [id])
+    videoId                     Int
+    flashcardProgress           FlashcardProgress @relation(fields: [flashcardProgressUserId, flashcardProgressPlaylistId], references: [userId, playlistId])
+    flashcardProgressUserId     Int
+    flashcardProgressPlaylistId Int
+
+    @@id([videoId, flashcardProgressUserId, flashcardProgressPlaylistId])
+}
+
+enum Grade {
+    FRESHMAN
+    SOPHOMORE
+    SENIOR_THREE
+}

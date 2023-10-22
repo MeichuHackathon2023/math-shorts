@@ -1,4 +1,4 @@
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { extendZodWithOpenApi } from "zod-to-openapi";
 import { z } from "zod";
 
 import { registry } from "@/utils/openApi";
@@ -19,3 +19,12 @@ const playlistType = z.object({
 export const playlistSchema = registry.register("Playlist", playlistType);
 
 export type Playlist = z.infer<typeof playlistSchema>;
+
+const playlistUserInputType = playlistSchema.extend({
+    users: z.array(z.object({id: z.number()})),
+    videos: z.array(z.object({id: z.number()}))
+})
+
+export const playlistUserInputSchema = registry.register("PlaylistUserInput", playlistUserInputType);
+
+export type PlaylistUserInput = z.infer<typeof playlistUserInputSchema>;

@@ -1,4 +1,4 @@
-import { OpenApiGeneratorV3 } from "@asteasolutions/zod-to-openapi";
+import { OpenApiGeneratorV3 } from "zod-to-openapi";
 import fs from "fs";
 import YAML from "yamljs";
 // Import files which contain schema or routes we want to generate for open api docs
@@ -11,7 +11,7 @@ function generateOpenApiDocs() {
     const docs = generator.generateDocument({
         info: {
             version: "1.0.0",
-            title: "臺大電信所學術論文獎後端",
+            title: "查理與他的快樂夥伴 - 數學解題短影片",
             description: "API docs",
         },
         servers: [],

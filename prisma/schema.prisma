@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 model User {
@@ -21,11 +22,18 @@ model Video {
     id                Int                         @id @default(autoincrement())
     name              String
     description       String
-    kkVodId           String
-    users             User[]
+    kkVodId           String                      @unique
+    user              User                        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId            Int
+    processed         Boolean                     @default(false)
+    duration          Float                       @default(0)
+    embedLink         String                      @default("") @db.VarChar(2000)
     tags              Tag[]
     playlists         Playlist[]
     FlashcardProgress FlashcardProgressOnVideos[]
+
+    @@fulltext([name])
+    @@fulltext([description])
 }
 
 model Playlist {
@@ -39,13 +47,14 @@ model Playlist {
 model Tag {
     id     Int     @id @default(autoincrement())
     videos Video[]
-    name   String
+    name   String  @unique
 }
 
 model PlayProgress {
-    userId        Int
-    videoId       Int
-    secondElapsed Int
+    userId            Int
+    videoId           Int
+    percentageElapsed Float    @default(0)
+    updateTime        DateTime @default(now())
 
     @@id([userId, videoId])
 }
@@ -59,9 +68,9 @@ model FlashcardProgress {
 }
 
 model FlashcardProgressOnVideos {
-    video                       Video             @relation(fields: [videoId], references: [id])
+    video                       Video             @relation(fields: [videoId], references: [id], onDelete: Cascade)
     videoId                     Int
-    flashcardProgress           FlashcardProgress @relation(fields: [flashcardProgressUserId, flashcardProgressPlaylistId], references: [userId, playlistId])
+    flashcardProgress           FlashcardProgress @relation(fields: [flashcardProgressUserId, flashcardProgressPlaylistId], references: [userId, playlistId], onDelete: Cascade)
     flashcardProgressUserId     Int
     flashcardProgressPlaylistId Int
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { extendZodWithOpenApi } from "zod-to-openapi";
 import { RequestHandler, Router } from "express";
 import { z, ZodSchema } from "zod";
 

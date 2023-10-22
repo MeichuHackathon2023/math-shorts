@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Video` ADD COLUMN `token` VARCHAR(2000) NOT NULL DEFAULT '';

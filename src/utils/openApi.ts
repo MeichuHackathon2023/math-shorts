@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { ZodRequestBody } from "@asteasolutions/zod-to-openapi/dist/openapi-registry";
+import { OpenAPIRegistry } from "zod-to-openapi";
+import { ZodRequestBody } from "zod-to-openapi/dist/openapi-registry";
 import { ZodObject, ZodSchema } from "zod";
 
 export const registry = new OpenAPIRegistry();

@@ -21,15 +21,17 @@
         "seed": "ts-node prisma/seed.ts"
     },
     "dependencies": {
-        "@asteasolutions/zod-to-openapi": "^5.2.0",
         "@prisma/client": "^4.15.0",
         "@types/bcrypt": "^5.0.0",
         "@types/handlebars": "^4.1.0",
-        "@types/node-cron": "^3.0.8",
+        "@types/node-cron": "^3.0.10",
         "@types/node-persist": "^3.1.4",
         "@types/nodemailer": "^6.4.9",
+        "axios": "^1.5.1",
         "bcrypt": "^5.1.0",
         "cors": "^2.8.5",
+        "csv-parse": "^5.5.2",
+        "csv-parser": "^3.0.0",
         "eslint-config-prettier": "^8.8.0",
         "eslint-plugin-simple-import-sort": "^10.0.0",
         "eslint-plugin-unused-imports": "^2.0.0",
@@ -41,6 +43,7 @@
         "jsonwebtoken": "^9.0.0",
         "lint-staged": "^13.2.3",
         "multer": "^1.4.5-lts.1",
+        "node-cron": "^3.0.2",
         "npm": "^9.8.0",
         "passport": "^0.6.0",
         "passport-jwt": "^4.0.1",
@@ -49,7 +52,8 @@
         "uuid": "^9.0.0",
         "winston": "^3.9.0",
         "yamljs": "^0.3.0",
-        "zod": "^3.21.4"
+        "zod": "^3.21.4",
+        "zod-to-openapi": "git+ssh://git@github.com:MeichuHackathon2023/zod-to-openapi.git"
     },
     "devDependencies": {
         "@types/cors": "^2.8.13",

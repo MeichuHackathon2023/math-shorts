@@ -15,6 +15,9 @@ export const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
         err = new InternalServerError();
     }
     const { message, code, statusCode } = err as CustomError;
-    res.status(statusCode).send({ code, message, requestId: req.requestId });
+    res.status(statusCode).send({
+        success: false,
+        error: { code, message, requestId: req.requestId },
+    });
     next();
 };

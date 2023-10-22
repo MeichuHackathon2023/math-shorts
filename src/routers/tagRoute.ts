@@ -54,7 +54,7 @@ createRoute({
         const {
             services: { tag: tagService },
         } = req;
-        const tags = await tagService.getTag();
+        const tags = await tagService.getTags();
         res.status(200).validateAndSend(tags);
     },
 });

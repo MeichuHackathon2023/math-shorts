@@ -12,6 +12,7 @@ import { requestIdMiddleware } from "@/middlewares/requestIdMiddleware";
 import { serviceMiddleware } from "@/middlewares/serviceMiddleware";
 import apiRouter from "@/routers/index";
 import passport from "@/utils/passport";
+import path from 'path'
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(serviceMiddleware);
 app.use(passport.initialize());
 app.use(loggingMiddleware);
 app.use("/api", apiRouter);
+app.use('/docs', express.static(path.join(__dirname, '../openapi-docs.yml')));
 app.use(errorMiddleware);
 
 export default app;

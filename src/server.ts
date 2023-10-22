@@ -2,10 +2,13 @@
 // import YAML from "yamljs";
 
 import app from "@/app";
-import config from "@/utils/config";
+import { port, env } from "@/utils/config";
 import logger from "@/utils/logger";
+import { updateStatus } from "./utils/vodWatchDog";
 
-const { port, env } = config;
+import cron from 'node-cron'
+
+cron.schedule('* * * * *', updateStatus);
 
 app.listen(port, () => {
     logger.info(`Listening to port ${port} in ${env} environment`);

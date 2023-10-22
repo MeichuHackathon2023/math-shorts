@@ -1,4 +1,4 @@
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { extendZodWithOpenApi } from "zod-to-openapi";
 import { z } from "zod";
 
 import { registry } from "@/utils/openApi";

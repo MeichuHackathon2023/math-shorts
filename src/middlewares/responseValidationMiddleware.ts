@@ -14,9 +14,9 @@ export const validateResponseMiddleware: <TResponse>(
     res.validateAndSend = (body: unknown) => {
         const parsed = responseSchema.safeParse(body);
         if (parsed.success) {
-            return res.send(parsed.data);
+            return res.send({ success: true, data: parsed.data });
         }
-        console.error(parsed.error);
+        console.error(body, parsed.error);
         throw new InternalServerError();
     };
     next();

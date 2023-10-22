@@ -1,7 +1,7 @@
 import { prisma } from "@/utils/prisma";
 
 const tagService = {
-    getTag: async () => {
+    getTags: async () => {
         // 取得所有 tag
         const tags = await prisma.tag.findMany();
         return tags;

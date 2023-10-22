@@ -91,6 +91,36 @@ createRoute({
     method: "get",
     path: "/",
     summary: "取得推薦影片",
+    needAuthenticated: false,
+
+    schemas: {
+        request: {},
+        response: z.array(videoSchema)
+    },
+
+    handler: async (req, res) => {
+
+        const {
+            services: { video: videoService },
+        } = req;
+
+        const videos = await videoService.getAllVideo();
+        const array = Array.from({ length: videos.length }, (_, k) => k);
+        const shuffled = array.sort(() => 0.5 - Math.random());
+        let selected = shuffled.slice(0, 10);
+
+        res.status(200).validateAndSend(
+            videos.filter((_, index) => selected.includes(index)),
+        );
+    },
+});
+
+
+createRoute({
+    ...videoRoute,
+    method: "get",
+    path: "/recommend",
+    summary: "取得推薦影片",
     needAuthenticated: true,
 
     schemas: {
@@ -99,6 +129,7 @@ createRoute({
     },
 
     handler: async (req, res) => {
+
         const {
             user,
             services: { video: videoService },
@@ -111,7 +142,6 @@ createRoute({
 
         if (!user) throw new InternalServerError()
 
-        // TODO: recommend engine
         const myList = playProgressService.getPlayProgressDataForRec(user.id);
         const { spawn } = require("child_process");
         const python = spawn('python',["script.py", JSON.stringify(myList)]);
